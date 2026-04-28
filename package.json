@@ -1,6 +1,6 @@
 {
   "name": "@naskot/node-rabbitmq-brokers",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Agnostic RabbitMQ brokers toolkit with pluggable HMAC message verification",
   "license": "MIT",
   "type": "module",
