@@ -1,0 +1,20 @@
+{
+  "name": "poc-rabbitmq-express",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@naskot/node-hmac-auth": "^0.5.2",
+    "@naskot/node-rabbitmq-brokers": "file:../..",
+    "redis": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

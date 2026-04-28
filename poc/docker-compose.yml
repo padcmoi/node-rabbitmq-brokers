@@ -1,0 +1,66 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: poc-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: poc-redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  express-api:
+    container_name: poc-express-api
+    build:
+      context: ..
+      dockerfile: poc/express/Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      RABBITMQ_PROTOCOL: amqp
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_VHOST: "/"
+      REDIS_URL: redis://redis:6379
+      HMAC_NAMESPACE: poc:rabbitmq:messages
+      HMAC_SECRET_TOKEN: poc_hmac_secret_token
+    restart: unless-stopped
+
+  nestjs-api:
+    container_name: poc-nestjs-api
+    build:
+      context: ..
+      dockerfile: poc/nestjs/Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      RABBITMQ_PROTOCOL: amqp
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_VHOST: "/"
+      REDIS_URL: redis://redis:6379
+      HMAC_NAMESPACE: poc:rabbitmq:messages
+      HMAC_SECRET_TOKEN: poc_hmac_secret_token
+    restart: unless-stopped
