@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [Unreleased] - 2026-04-28
+## [0.1.0] - 2026-04-28
 
 - Added framework-agnostic RabbitMQ core:
   - `RabbitMQPool` with shared connections and resilient channel lifecycle.
