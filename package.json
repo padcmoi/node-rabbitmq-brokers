@@ -1,7 +1,7 @@
 {
-  "name": "@naskot/<package-name>",
+  "name": "@naskot/node-rabbitmq-brokers",
   "version": "0.0.0",
-  "description": "<short description>",
+  "description": "Agnostic RabbitMQ brokers toolkit with pluggable HMAC message verification",
   "license": "MIT",
   "type": "module",
   "private": true,
@@ -22,11 +22,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/padcmoi/<repo-name>.git"
+    "url": "https://github.com/padcmoi/node-rabbitmq-brokers.git"
   },
-  "homepage": "https://github.com/padcmoi/<repo-name>",
+  "homepage": "https://github.com/padcmoi/node-rabbitmq-brokers",
   "bugs": {
-    "url": "https://github.com/padcmoi/<repo-name>/issues"
+    "url": "https://github.com/padcmoi/node-rabbitmq-brokers/issues"
   },
   "engines": {
     "node": ">=18"
@@ -45,13 +45,18 @@
     "prepublishOnly": "npm run check && npm test && npm run build"
   },
   "keywords": [
-    "node",
+    "rabbitmq",
+    "amqp",
+    "hmac",
     "typescript",
-    "npm-package"
+    "microservices"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "amqplib": "^0.10.9"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/amqplib": "^0.10.8",
     "@types/node": "^24.6.0",
     "eslint": "^10.2.1",
     "prettier": "^3.8.3",
