@@ -1,45 +1,78 @@
-# <package-name>
+# @naskot/node-rabbitmq-brokers
 
-> Template README — replace all placeholders before publishing.
+`@naskot/node-rabbitmq-brokers` is a framework-agnostic TypeScript library for building RabbitMQ broker layers with optional HMAC message signing.
 
-## What is this package?
+## Goal
 
-TODO: short purpose (1-2 lines).
+The library provides a shared foundation to:
 
-## Install
+- manage AMQP connection and topology with resilience
+- publish and consume signed messages
+- route business actions by `type`
+- stay portable across frameworks (Express, NestJS, others)
 
-```bash
-npm i <package-name>
-```
+## Configuration Rule
 
-## Quick start
+The library does not read `process.env`.
 
-TODO: add minimal usage example.
+Runtime variables should be resolved in your application service layer, then passed as plain objects (RabbitMQ config, HMAC services, router options).
 
-## API
+## Available APIs and Helpers
 
-TODO: list exported functions/classes/types.
+### `RabbitMQPool`
 
-## Integration guides
+Responsibilities:
 
-- [Express](./docs/express.md)
-- [NestJS](./docs/nestjs.md)
+- share connection and channel instances by namespace
+- reconnect automatically on connection loss
+- expose RabbitMQ primitives (exchange, queue, bind, consume, ack/nack)
+- support cleanup of empty retry queues
 
-## Development
+### `RabbitMQClient`
 
-```bash
-npm ci
-npm run lint
-npm run typecheck
-npm test
-npm run build
-```
+Responsibilities:
 
-## Notes
+- publish messages through `publish(...)`
+- consume messages through `consume(...)`
+- plug in an injectable HMAC strategy with `signMessage` and `verifyMessage`
+- enforce consumer-side security checks (allowed key ids, reject/requeue)
 
-TODO: add constraints, compatibility, and caveats.
+### `RabbitMqBrokerRouter`
 
-Configuration rule:
+Responsibilities:
 
-- Never read `process.env` inside the library.
-- Read env values in the app service/provider layer and pass plain config to the library.
+- register actions through `registerAction(...)`
+- publish actions through `publish(...)` in fanout or topic mode
+- start consumption through `startConsumer(...)`
+- route incoming messages to the proper action by `type`
+
+### `brokerRouterHelpers`
+
+Exposed helpers:
+
+- `normalizeActionType(...)`: normalizes and validates action `type`
+- `parsePayloadData(...)`: defensively parses `payload.data`
+
+### Exported Types
+
+The package also exports all types required for strict TypeScript integration (config, payloads, action contracts, HMAC services, etc.).
+
+## Integration Guides
+
+- [Express Guide](./docs/express.md)
+- [NestJS Guide](./docs/nestjs.md)
+
+## POC
+
+A complete POC is available here:
+
+- [POC Express <-> NestJS](./poc/README.md)
+
+## Quality
+
+Standard scripts:
+
+- `npm run lint`
+- `npm run typecheck`
+- `npm test`
+- `npm run build`
